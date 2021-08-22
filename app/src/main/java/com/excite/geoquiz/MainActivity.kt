@@ -2,12 +2,16 @@ package com.excite.geoquiz
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 
+private const val TAG = "MainActivity"
+
 class MainActivity : AppCompatActivity() {
+
 
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
@@ -24,9 +28,11 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_asia, true))
 
     private var currentIndex = 0
+    private var correctAnswers = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
 
         trueButton = findViewById(R.id.true_button)
@@ -37,15 +43,18 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
+            disableAnswerButtons()
         }
         falseButton.setOnClickListener { view: View ->
             checkAnswer(false)
+            disableAnswerButtons()
         }
 
         nextButton.setOnClickListener {
             // циклически получаем индекс вопроса из списка вопросов, который необходимо отобразить
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
+            enableAnswerButtons()
         }
 
         backButton.setOnClickListener {
@@ -56,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                 currentIndex -= 1
             }
             updateQuestion()
+            enableAnswerButtons()
         }
 
         questionTextView.setOnClickListener {
@@ -65,6 +75,44 @@ class MainActivity : AppCompatActivity() {
 
         updateQuestion()
 
+    }
+
+    // делаем кнопки ответа на вопрос активными при смене вопроса
+    private fun enableAnswerButtons() {
+        trueButton.isEnabled = true
+        falseButton.isEnabled = true
+    }
+
+    // делаем кнопки ответа на вопрос неактивными после нажатия на True/False
+    private fun disableAnswerButtons() {
+        trueButton.isEnabled = false
+        falseButton.isEnabled = false
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart() called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume() called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause() called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop() called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy() called")
     }
 
     // функция, которая обоновляет текст, отображаемый в TextView
